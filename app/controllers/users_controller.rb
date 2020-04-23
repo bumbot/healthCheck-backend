@@ -11,4 +11,15 @@ class UsersController < ApplicationController
         render json: user
     end
 
+    def create
+        user = User.create(username: params["username"], password: params["password"])
+
+        if user
+            render json: user
+        else
+            render json: {
+                message: "Unable to create new user"
+            }
+        end
+    end
 end

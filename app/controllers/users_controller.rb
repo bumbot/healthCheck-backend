@@ -14,11 +14,12 @@ class UsersController < ApplicationController
     def create
         user = User.create(username: params["username"], password: params["password"])
 
-        if user
+        if user #&& user.username is unique
             render json: user
         else
             render json: {
                 message: "Unable to create new user"
+                error: true
             }
         end
     end

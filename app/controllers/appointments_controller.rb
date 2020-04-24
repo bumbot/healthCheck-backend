@@ -2,13 +2,13 @@ class AppointmentsController < ApplicationController
     def index
         appts = Appointment.all
 
-        render json: appts
+        render json: appts, except: [:created_at, :updated_at]
     end
 
     def show
         appt = Appointment.find(params[:id])
 
-        render json: appt
+        render json: appt, except: [:created_at, :updated_at]
     end
 
     def create
@@ -18,7 +18,7 @@ class AppointmentsController < ApplicationController
         # check if valid appointment, and whether time is open during clinic's hours
         if appt # && params["clinic"].hours is open
             render json: {
-                appointment_data: appt,
+                appointment_data: appt, except: [:created_at, :updated_at],
                 error: false
             }
         else

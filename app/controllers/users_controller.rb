@@ -14,7 +14,16 @@ class UsersController < ApplicationController
     def create
         user = User.create(username: params["username"], password: params["password"])
 
-        if user #&& user.username is unique
+        isUnique = true
+
+        User.all.each do |u|
+            if user.username == u.username
+                isUnique = false
+            end
+        end
+
+
+        if user && isUnique
             render json: user, except: [:created_at, :updated_at]
         else
             render json: {

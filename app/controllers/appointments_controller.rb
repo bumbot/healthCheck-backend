@@ -28,4 +28,23 @@ class AppointmentsController < ApplicationController
             }
         end
     end
+
+    def destroy
+        appt = Appointment.find(params["id"])
+
+        if appt
+            clinic = appt.clinic
+            Appointment.delete(appt)
+
+            render json: {
+                clinic: clinic,
+                error: false
+            }
+        else
+            render json: {
+                message: "Unable to delete appointment. Please try again later",
+                error: true
+            }
+        end
+    end
 end

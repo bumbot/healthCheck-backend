@@ -12,7 +12,7 @@ class UsersController < ApplicationController
     end
 
     def create
-        user = User.create(username: params["username"], password: params["password"])
+        user = User.new(username: params["username"], password: params["password"])
 
         isUnique = true
 
@@ -24,10 +24,16 @@ class UsersController < ApplicationController
 
 
         if user && isUnique
-            render json: user, except: [:created_at, :updated_at]
+            user.save
+            render json: {
+                user_data: user.username,
+                user_appts: user.appointments,
+                user_clinics: user.clinics,
+                error: false
+            }
         else
             render json: {
-                message: "Unable to create new user",
+                message: "Unable to create new user; Username already exists",
                 error: true
             }
         end

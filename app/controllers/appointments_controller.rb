@@ -31,7 +31,7 @@ class AppointmentsController < ApplicationController
         end
 
         appt = Appointment.new(user_id: params["user"], clinic_id: params["clinic"],
-        appointment_date: params["appointment_date"], appointment_time: time)
+        appointment_date: params["appointment_date"], appointment_time: time, reason_for_visit: params["reason_for_visit"])
         
         if appt
             appt.save

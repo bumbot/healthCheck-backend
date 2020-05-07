@@ -4,7 +4,10 @@ class AuthController < ApplicationController
 
         if user && user.authenticate(params["password"])
             render json: {
-                user_data: user.username,
+                user_data: {
+                    username: user.username,
+                    id: user.id
+                },
                 user_appts: user.appointments,
                 user_clinics: user.clinics,
                 error: false

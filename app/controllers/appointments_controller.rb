@@ -12,13 +12,35 @@ class AppointmentsController < ApplicationController
     end
 
     def create
-        appt = Appointment.create(user_id: params["user"], clinic_id: params["clinic"],
-        appointment_date: params["appointment_date"], appointment_time: params["appointment_time"])
+        time = ""
+        hour = params["appointment_time"].slice(0,2)
+        minutes = params["appointment_time"].slice(1,3)
+        if params["appointment_hour"] == "am"
+            if hour == "12"
+                time = "00" + minutes
+            else
+                time = params["appointment_time"]
+            end
+        else
+            if hour == "12"
+                time = params["appointment_time"]
+            else
+                hour = hour.to_i + 12
+                time = hour.to_s+ minutes
+            end
+        end
 
-        # check if valid appointment, and whether time is open during clinic's hours
-        if appt # && params["clinic"].hours is open
+        appt = Appointment.new(user_id: params["user"], clinic_id: params["clinic"],
+        appointment_date: params["appointment_date"], appointment_time: time)
+        
+        if appt
+            appt.save
+            user = User.find(params["user"])
             render json: {
-                appointment_data: appt, except: [:created_at, :updated_at],
+                user_data: {
+                    user_appts: user.appointments,
+                    user_clinics: user.clinics,
+                },
                 error: false
             }
         else
